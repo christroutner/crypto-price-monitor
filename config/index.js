@@ -7,7 +7,7 @@ const config = {
   // the price fluctuates more than 10% away from these targets, then the system
   // will send an email.
   btcTarget: 28278,
-  ethTarget: 1741,
+  ethTarget: 1920,
   avaxTarget: 17.25
 }
 

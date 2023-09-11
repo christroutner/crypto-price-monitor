@@ -8,7 +8,7 @@ const config = {
   // will send an email.
   btcTarget: 26250,
   ethTarget: 1666,
-  avaxTarget: 10.80
+  avaxTarget: 9.29
 }
 
 module.exports = config

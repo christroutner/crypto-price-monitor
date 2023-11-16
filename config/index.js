@@ -6,9 +6,9 @@ const config = {
   // These target prices are the last price that the loan was rebalanced at. If
   // the price fluctuates more than 10% away from these targets, then the system
   // will send an email.
-  btcTarget: 33791,
-  ethTarget: 1831,
-  avaxTarget: 11.98
+  btcTarget: 36650,
+  ethTarget: 2022,
+  avaxTarget: 22.86
 }
 
 module.exports = config

@@ -8,7 +8,19 @@ const config = {
   // will send an email.
   btcTarget: 36650,
   ethTarget: 2022,
-  avaxTarget: 21.31
+  // avaxTarget: 21.31,
+
+  avaxHighTarget: 21.31,
+  avaxLowTarget: 20.00,
+
+  // Nostr config
+  dmTarget: 'npub188msq9d8tkdnakhlg9j0sn4602773et7ue95u5xeuszf082wx79qq4vz6a',
+  relay: 'wss://nostr-relay.psfoundation.info',
+
+  // Nostr priv key for this app
+  nostrPrivKey: 'f11de5600c2ee52de9cd77d40c200e191e6449c8bf166400afb2259366abf0bd'
+  // public key: 2b28fd5ccaa5218afbf7556c8b539a8bbd15fa2bf07c29c51686f07442c3e8c5
 }
 
-module.exports = config
+// module.exports = config
+export default config

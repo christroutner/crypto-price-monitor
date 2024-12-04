@@ -10,8 +10,8 @@ const config = {
   ethTarget: 2022,
   // avaxTarget: 21.31,
 
-  avaxHighTarget: 21.31,
-  avaxLowTarget: 20.00,
+  avaxHighTarget: 65.95,
+  avaxLowTarget: 43.96,
 
   // Nostr config
   dmTarget: 'npub188msq9d8tkdnakhlg9j0sn4602773et7ue95u5xeuszf082wx79qq4vz6a',

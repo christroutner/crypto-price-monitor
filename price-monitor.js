@@ -84,3 +84,45 @@ function calcPercent (currentPrice, targetPrice) {
 
   return percent
 }
+
+// Run a function at a specific time.
+function runAtSpecificTime (time, callback) {
+  const now = new Date()
+  const targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), time.getHours(), time.getMinutes(), time.getSeconds())
+
+  if (targetTime < now) {
+    targetTime.setDate(targetTime.getDate() + 1) // Schedule for the next day if the target time has already passed
+  }
+
+  const delay = targetTime.getTime() - now.getTime()
+
+  setTimeout(() => {
+    callback()
+    setInterval(callback, 86400000) // 24 hours in milliseconds
+  }, delay)
+}
+
+// Send a daily update on the prices of different assets.
+async function dailyUpdate () {
+  try {
+    const avaxPrice = await price.getAvaxPrice()
+    console.log(`AVAX price: ${avaxPrice}`)
+
+    const msg = `
+AVAX Price: ${avaxPrice}
+High mark: ${config.avaxHighTarget} (${calcPercent(avaxPrice, config.avaxHighTarget)}%)
+Low mark: ${config.avaxLowTarget} (${calcPercent(avaxPrice, config.avaxLowTarget)}%)
+
+`
+    await nostr.sendMsg({ msg })
+  } catch (err) {
+    console.error('Error in dailyUpdate(): ', err)
+  }
+}
+
+const timeToRun = new Date()
+timeToRun.setHours(6) // Set the hour to 7 AM
+timeToRun.setMinutes(30) // Set the minutes to 0
+timeToRun.setSeconds(0) // Set the seconds to 0
+
+runAtSpecificTime(timeToRun, dailyUpdate)

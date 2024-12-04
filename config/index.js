@@ -17,8 +17,12 @@ const config = {
   avaxLowTarget: 43.96,
 
   // Targets for AVAX-ETH pair
-  ethHighTarget: 75,
-  ethLowTarget: 65
+  ethHighTarget: 77,
+  ethLowTarget: 63,
+
+  // Targets for AVAX-BTC pair
+  btcHighTarget: 2056,
+  btcLowTarget: 1680
 }
 
 // module.exports = config

@@ -31,20 +31,62 @@ async function start () {
     // Get the current prices for the assets.
     const btcPrice = await price.getBtcPrice()
     console.log(`BTC price: ${btcPrice}`)
-
     const ethPrice = await price.getEthPrice()
     console.log(`ETH price: ${ethPrice}`)
-
     const avaxPrice = await price.getAvaxPrice()
     console.log(`AVAX price: ${avaxPrice}`)
 
-    // AVAX Price Targets
-    if (avaxPrice > config.avaxHighTarget) {
-      const msg = `AVAX price is ${avaxPrice} which is above the high-water target of ${config.avaxHighTarget}`
+    // Calculate the AVAX price targets
+    const avaxHighTargetPercent = -1 * calcPercent(avaxPrice, config.avaxHighTarget)
+    const avaxLowTargetPercent = calcPercent(avaxPrice, config.avaxLowTarget)
+    console.log(`\nAVAX is ${avaxHighTargetPercent}% away from the high target.`)
+    console.log(`AVAX is ${avaxLowTargetPercent}% away from the low target.`)
+
+    // Send out alerts if AVAX is near the price targets
+    if (avaxHighTargetPercent < 5) {
+      const msg = `AVAX price is ${avaxPrice} which is ${avaxHighTargetPercent}% away from the high target of ${config.avaxHighTarget}`
+      await nostr.sendMsg({ msg })
+    }
+    if (avaxLowTargetPercent < 5) {
+      const msg = `AVAX price is ${avaxPrice} which is ${avaxLowTargetPercent}% away from the low target of ${config.avaxLowTarget}`
       await nostr.sendMsg({ msg })
     }
 
-    console.log('Finished.\n')
+    // Calculate the AVAX-ETH price targets
+    const ethAvaxPrice = ethPrice / avaxPrice
+    const ethHighTargetPercent = -1 * calcPercent(ethAvaxPrice, config.ethHighTarget)
+    const ethLowTargetPercent = calcPercent(ethAvaxPrice, config.ethLowTarget)
+    console.log(`\nethAvaxPrice: ${ethAvaxPrice}, low target: ${config.ethLowTarget}, high target: ${config.ethHighTarget}`)
+    console.log(`ETH-AVAX pair is ${ethHighTargetPercent}% away from the high target and ${ethLowTargetPercent}% away from the low target.`)
+
+    // Send out alerts if AVAX-ETH pair is near the price targets
+    if (ethHighTargetPercent < 5) {
+      const msg = `ETH/AVAX price is ${ethAvaxPrice} which is ${ethHighTargetPercent}% away from the high target of ${config.ethHighTarget}`
+      await nostr.sendMsg({ msg })
+    }
+    if (ethLowTargetPercent < 5) {
+      const msg = `ETH/AVAX price is ${ethAvaxPrice} which is ${ethLowTargetPercent}% away from the low target of ${config.ethLowTarget}`
+      await nostr.sendMsg({ msg })
+    }
+
+    // Calculate the AVAX-BTC price targets
+    const btcAvaxPrice = btcPrice / avaxPrice
+    const btcHighTargetPercent = -1 * calcPercent(btcAvaxPrice, config.btcHighTarget)
+    const btcLowTargetPercent = calcPercent(btcAvaxPrice, config.btcLowTarget)
+    console.log(`\nbtcAvaxPrice: ${btcAvaxPrice}, low target: ${config.btcLowTarget}, high target: ${config.btcHighTarget}`)
+    console.log(`BTC-AVAX pair is ${btcHighTargetPercent}% away from the high target and ${btcLowTargetPercent}% away from the low target.`)
+
+    // Send out alerts if AVAX-ETH pair is near the price targets
+    if (btcHighTargetPercent < 5) {
+      const msg = `BTC/AVAX price is ${btcAvaxPrice} which is ${btcHighTargetPercent}% away from the high target of ${config.btcHighTarget}`
+      await nostr.sendMsg({ msg })
+    }
+    if (btcLowTargetPercent < 5) {
+      const msg = `BTC/AVAX price is ${btcAvaxPrice} which is ${btcLowTargetPercent}% away from the low target of ${config.btcLowTarget}`
+      await nostr.sendMsg({ msg })
+    }
+
+    console.log('\nFinished.\n')
   } catch (err) {
     console.error('Error: ', err)
   }
@@ -85,12 +127,24 @@ async function dailyUpdate () {
   try {
     const avaxPrice = await price.getAvaxPrice()
     console.log(`AVAX price: ${avaxPrice}`)
+    const ethPrice = await price.getEthPrice()
+    const ethAvaxPrice = ethPrice / avaxPrice
+    const btcPrice = await price.getBtcPrice()
+    const btcAvaxPrice = btcPrice / avaxPrice
 
     const msg = `
 AVAX Price: ${avaxPrice}
-High mark: ${config.avaxHighTarget} (${calcPercent(avaxPrice, config.avaxHighTarget)}%)
+High mark: ${config.avaxHighTarget} (${-1 * calcPercent(avaxPrice, config.avaxHighTarget)}%)
 Low mark: ${config.avaxLowTarget} (${calcPercent(avaxPrice, config.avaxLowTarget)}%)
 
+ETH/AVAX Price: ${ethAvaxPrice}
+High mark: ${config.ethHighTarget} (${-1 * calcPercent(ethAvaxPrice, config.ethHighTarget)})
+Low mark: ${config.ethLowTarget} (${-1 * calcPercent(ethAvaxPrice, config.ethlowTarget)})
+
+
+BTC/AVAX Price: ${btcAvaxPrice}
+High mark: ${config.btcHighTarget} (${-1 * calcPercent(btcAvaxPrice, config.btcHighTarget)})
+Low mark: ${config.btcLowTarget} (${-1 * calcPercent(btcAvaxPrice, config.btclowTarget)})
 `
     await nostr.sendMsg({ msg })
   } catch (err) {

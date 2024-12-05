@@ -144,12 +144,12 @@ Low mark: ${config.avaxLowTarget} (${calcPercent(avaxPrice, config.avaxLowTarget
 
 ETH/AVAX Price: ${ethAvaxPrice}
 High mark: ${config.ethHighTarget} (${-1 * calcPercent(ethAvaxPrice, config.ethHighTarget)})
-Low mark: ${config.ethLowTarget} (${-1 * calcPercent(ethAvaxPrice, config.ethlowTarget)})
+Low mark: ${config.ethLowTarget} (${calcPercent(ethAvaxPrice, config.ethLowTarget)})
 
 
 BTC/AVAX Price: ${btcAvaxPrice}
 High mark: ${config.btcHighTarget} (${-1 * calcPercent(btcAvaxPrice, config.btcHighTarget)})
-Low mark: ${config.btcLowTarget} (${-1 * calcPercent(btcAvaxPrice, config.btclowTarget)})
+Low mark: ${config.btcLowTarget} (${calcPercent(btcAvaxPrice, config.btcLowTarget)})
 `
     await retryQueue.addToQueue(nostr.sendMsg, { msg })
   } catch (err) {

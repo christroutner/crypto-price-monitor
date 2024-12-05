@@ -75,23 +75,23 @@ async function start () {
     }
 
     // Calculate the AVAX-BTC price targets
-  //   const btcAvaxPrice = floor2(btcPrice / avaxPrice)
-  //   const btcHighTargetPercent = -1 * calcPercent(btcAvaxPrice, config.btcHighTarget)
-  //   const btcLowTargetPercent = calcPercent(btcAvaxPrice, config.btcLowTarget)
-  //   console.log(`\nbtcAvaxPrice: ${btcAvaxPrice}, low target: ${config.btcLowTarget}, high target: ${config.btcHighTarget}`)
-  //   console.log(`BTC-AVAX pair is ${btcHighTargetPercent}% away from the high target and ${btcLowTargetPercent}% away from the low target.`)
-  //
-  //   // Send out alerts if AVAX-ETH pair is near the price targets
-  //   if (btcHighTargetPercent < 5) {
-  //     const msg = `BTC/AVAX price is ${btcAvaxPrice} which is ${btcHighTargetPercent}% away from the high target of ${config.btcHighTarget}`
-  //     await retryQueue.addToQueue(nostr.sendMsg, { msg })
-  //   }
-  //   if (btcLowTargetPercent < 5) {
-  //     const msg = `BTC/AVAX price is ${btcAvaxPrice} which is ${btcLowTargetPercent}% away from the low target of ${config.btcLowTarget}`
-  //     await retryQueue.addToQueue(nostr.sendMsg, { msg })
-  //   }
-  //
-  //   console.log('\nFinished.\n')
+    const btcAvaxPrice = floor2(btcPrice / avaxPrice)
+    const btcHighTargetPercent = -1 * calcPercent(btcAvaxPrice, config.btcHighTarget)
+    const btcLowTargetPercent = calcPercent(btcAvaxPrice, config.btcLowTarget)
+    console.log(`\nbtcAvaxPrice: ${btcAvaxPrice}, low target: ${config.btcLowTarget}, high target: ${config.btcHighTarget}`)
+    console.log(`BTC-AVAX pair is ${btcHighTargetPercent}% away from the high target and ${btcLowTargetPercent}% away from the low target.`)
+
+    // Send out alerts if AVAX-ETH pair is near the price targets
+    if (btcHighTargetPercent < 5) {
+      const msg = `BTC/AVAX price is ${btcAvaxPrice} which is ${btcHighTargetPercent}% away from the high target of ${config.btcHighTarget}`
+      await retryQueue.addToQueue(nostr.sendMsg, { msg })
+    }
+    if (btcLowTargetPercent < 5) {
+      const msg = `BTC/AVAX price is ${btcAvaxPrice} which is ${btcLowTargetPercent}% away from the low target of ${config.btcLowTarget}`
+      await retryQueue.addToQueue(nostr.sendMsg, { msg })
+    }
+
+    console.log('\nFinished.\n')
   } catch (err) {
     console.error('Error: ', err)
   }

@@ -92,9 +92,9 @@ async function start () {
   //   }
   //
   //   console.log('\nFinished.\n')
-  // } catch (err) {
-  //   console.error('Error: ', err)
-  // }
+  } catch (err) {
+    console.error('Error: ', err)
+  }
 }
 start()
 

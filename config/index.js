@@ -17,8 +17,8 @@ const config = {
   avaxLowTarget: 43.96,
 
   // Targets for AVAX-ETH pair
-  ethHighTarget: 77,
-  ethLowTarget: 63,
+  ethHighTarget: 90.75,
+  ethLowTarget: 60.5,
 
   // Targets for AVAX-BTC pair
   btcHighTarget: 2056,

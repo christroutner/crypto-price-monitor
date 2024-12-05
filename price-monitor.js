@@ -5,8 +5,7 @@
 */
 
 // Global npm libraries
-// const { Avalanche } = require('avalanche')
-// const axios = require('axios')
+import RetryQueue from '@chris.troutner/retry-queue'
 
 // Local libraries
 // const NodeMailer = require('./lib/nodemailer.js')
@@ -14,8 +13,14 @@ import config from './config/index.js'
 import Price from './lib/price.js'
 import Nostr from './lib/nostr.js'
 
+// Instantiate libraries
 const price = new Price()
 const nostr = new Nostr()
+const retryQueue = new RetryQueue({
+  concurrency: 1,
+  attempts: 5,
+  retryPeriod: 1000
+})
 
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 
@@ -45,11 +50,11 @@ async function start () {
     // Send out alerts if AVAX is near the price targets
     if (avaxHighTargetPercent < 5) {
       const msg = `AVAX price is ${avaxPrice} which is ${avaxHighTargetPercent}% away from the high target of ${config.avaxHighTarget}`
-      await nostr.sendMsg({ msg })
+      await retryQueue.addToQueue(nostr.sendMsg, { msg })
     }
     if (avaxLowTargetPercent < 5) {
       const msg = `AVAX price is ${avaxPrice} which is ${avaxLowTargetPercent}% away from the low target of ${config.avaxLowTarget}`
-      await nostr.sendMsg({ msg })
+      await retryQueue.addToQueue(nostr.sendMsg, { msg })
     }
 
     // Calculate the AVAX-ETH price targets
@@ -62,11 +67,11 @@ async function start () {
     // Send out alerts if AVAX-ETH pair is near the price targets
     if (ethHighTargetPercent < 5) {
       const msg = `ETH/AVAX price is ${ethAvaxPrice} which is ${ethHighTargetPercent}% away from the high target of ${config.ethHighTarget}`
-      await nostr.sendMsg({ msg })
+      await retryQueue.addToQueue(nostr.sendMsg, { msg })
     }
     if (ethLowTargetPercent < 5) {
       const msg = `ETH/AVAX price is ${ethAvaxPrice} which is ${ethLowTargetPercent}% away from the low target of ${config.ethLowTarget}`
-      await nostr.sendMsg({ msg })
+      await retryQueue.addToQueue(nostr.sendMsg, { msg })
     }
 
     // Calculate the AVAX-BTC price targets
@@ -79,11 +84,11 @@ async function start () {
     // Send out alerts if AVAX-ETH pair is near the price targets
     if (btcHighTargetPercent < 5) {
       const msg = `BTC/AVAX price is ${btcAvaxPrice} which is ${btcHighTargetPercent}% away from the high target of ${config.btcHighTarget}`
-      await nostr.sendMsg({ msg })
+      await retryQueue.addToQueue(nostr.sendMsg, { msg })
     }
     if (btcLowTargetPercent < 5) {
       const msg = `BTC/AVAX price is ${btcAvaxPrice} which is ${btcLowTargetPercent}% away from the low target of ${config.btcLowTarget}`
-      await nostr.sendMsg({ msg })
+      await retryQueue.addToQueue(nostr.sendMsg, { msg })
     }
 
     console.log('\nFinished.\n')
@@ -146,7 +151,7 @@ BTC/AVAX Price: ${btcAvaxPrice}
 High mark: ${config.btcHighTarget} (${-1 * calcPercent(btcAvaxPrice, config.btcHighTarget)})
 Low mark: ${config.btcLowTarget} (${-1 * calcPercent(btcAvaxPrice, config.btclowTarget)})
 `
-    await nostr.sendMsg({ msg })
+    await retryQueue.addToQueue(nostr.sendMsg, { msg })
   } catch (err) {
     console.error('Error in dailyUpdate(): ', err)
   }

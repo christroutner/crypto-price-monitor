@@ -58,7 +58,7 @@ async function start () {
     }
 
     // Calculate the AVAX-ETH price targets
-    const ethAvaxPrice = ethPrice / avaxPrice
+    const ethAvaxPrice = floor2(ethPrice / avaxPrice)
     const ethHighTargetPercent = -1 * calcPercent(ethAvaxPrice, config.ethHighTarget)
     const ethLowTargetPercent = calcPercent(ethAvaxPrice, config.ethLowTarget)
     console.log(`\nethAvaxPrice: ${ethAvaxPrice}, low target: ${config.ethLowTarget}, high target: ${config.ethHighTarget}`)
@@ -75,7 +75,7 @@ async function start () {
     }
 
     // Calculate the AVAX-BTC price targets
-  //   const btcAvaxPrice = btcPrice / avaxPrice
+  //   const btcAvaxPrice = floor2(btcPrice / avaxPrice)
   //   const btcHighTargetPercent = -1 * calcPercent(btcAvaxPrice, config.btcHighTarget)
   //   const btcLowTargetPercent = calcPercent(btcAvaxPrice, config.btcLowTarget)
   //   console.log(`\nbtcAvaxPrice: ${btcAvaxPrice}, low target: ${config.btcLowTarget}, high target: ${config.btcHighTarget}`)
@@ -133,9 +133,9 @@ async function dailyUpdate () {
     const avaxPrice = await price.getAvaxPrice()
     console.log(`AVAX price: ${avaxPrice}`)
     const ethPrice = await price.getEthPrice()
-    const ethAvaxPrice = ethPrice / avaxPrice
+    const ethAvaxPrice = floor2(ethPrice / avaxPrice)
     const btcPrice = await price.getBtcPrice()
-    const btcAvaxPrice = btcPrice / avaxPrice
+    const btcAvaxPrice = floor2(btcPrice / avaxPrice)
 
     const msg = `
 AVAX Price: ${avaxPrice}
@@ -163,3 +163,17 @@ timeToRun.setMinutes(30) // Set the minutes to 0
 timeToRun.setSeconds(0) // Set the seconds to 0
 
 runAtSpecificTime(timeToRun, dailyUpdate)
+
+// floor2 - round down to 2 decimal places
+// Takes a number and returns it, rounded to the nearest 2 decimal place.
+function floor2 (num) {
+  const thisNum = Number(num)
+
+  if (isNaN(thisNum)) throw new Error('input must be a number')
+
+  let tempNum = thisNum * 100
+  tempNum = Math.floor(tempNum)
+  tempNum = tempNum / 100
+
+  return tempNum
+}

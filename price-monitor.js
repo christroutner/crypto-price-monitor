@@ -33,7 +33,7 @@ setInterval(function () {
 }, 60000 * 60) // 1 hour
 
 // Check for new DMs every 2 minutes.
-setInterval(function() {
+setInterval(function () {
   readMsgs()
 }, 60000 * 2)
 
@@ -187,18 +187,18 @@ function floor2 (num) {
   return tempNum
 }
 
-async function readMsgs() {
+async function readMsgs () {
   try {
     const result = await nostr.readMsg()
 
-    if(!result) return
+    if (!result) return
 
-    const {msg, id} = result
+    const { msg, id } = result
 
-    if(!seenMsgs.includes(id)) {
+    if (!seenMsgs.includes(id)) {
       seenMsgs.push(id)
 
-      if(msg.includes('/report')) {
+      if (msg.includes('/report')) {
         const now = new Date()
         console.log(`Report command recieved at ${now.toLocaleString()}`)
 
@@ -207,7 +207,7 @@ async function readMsgs() {
         console.log('msg: ', msg)
       }
     }
-  } catch(err) {
+  } catch (err) {
     console.error('Error in readMsgs(): ', err)
   }
 }

@@ -22,11 +22,20 @@ const retryQueue = new RetryQueue({
   retryPeriod: 1000
 })
 
+// State
+const seenMsgs = []
+
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 
+// Do a price check once per hour.
 setInterval(function () {
   start()
 }, 60000 * 60) // 1 hour
+
+// Check for new DMs every 2 minutes.
+setInterval(function () {
+  readMsgs()
+}, 60000 * 2)
 
 async function start () {
   try {
@@ -138,18 +147,18 @@ async function dailyUpdate () {
     const btcAvaxPrice = floor2(btcPrice / avaxPrice)
 
     const msg = `
-AVAX Price: ${avaxPrice}
+AVAX Price: ${floor2(avaxPrice)}
 High mark: ${config.avaxHighTarget} (${-1 * calcPercent(avaxPrice, config.avaxHighTarget)}%)
 Low mark: ${config.avaxLowTarget} (${calcPercent(avaxPrice, config.avaxLowTarget)}%)
 
-ETH/AVAX Price: ${ethAvaxPrice}
-High mark: ${config.ethHighTarget} (${-1 * calcPercent(ethAvaxPrice, config.ethHighTarget)})
-Low mark: ${config.ethLowTarget} (${calcPercent(ethAvaxPrice, config.ethLowTarget)})
+ETH/AVAX Price: ${floor2(ethAvaxPrice)}
+High mark: ${config.ethHighTarget} (${-1 * calcPercent(ethAvaxPrice, config.ethHighTarget)}%)
+Low mark: ${config.ethLowTarget} (${calcPercent(ethAvaxPrice, config.ethLowTarget)}%)
 
 
-BTC/AVAX Price: ${btcAvaxPrice}
-High mark: ${config.btcHighTarget} (${-1 * calcPercent(btcAvaxPrice, config.btcHighTarget)})
-Low mark: ${config.btcLowTarget} (${calcPercent(btcAvaxPrice, config.btcLowTarget)})
+BTC/AVAX Price: ${floor2(btcAvaxPrice)}
+High mark: ${config.btcHighTarget} (${-1 * calcPercent(btcAvaxPrice, config.btcHighTarget)}%)
+Low mark: ${config.btcLowTarget} (${calcPercent(btcAvaxPrice, config.btcLowTarget)}%)
 `
     await retryQueue.addToQueue(nostr.sendMsg, { msg })
   } catch (err) {
@@ -176,4 +185,29 @@ function floor2 (num) {
   tempNum = tempNum / 100
 
   return tempNum
+}
+
+async function readMsgs () {
+  try {
+    const result = await nostr.readMsg()
+
+    if (!result) return
+
+    const { msg, id } = result
+
+    if (!seenMsgs.includes(id)) {
+      seenMsgs.push(id)
+
+      if (msg.includes('/report')) {
+        const now = new Date()
+        console.log(`Report command recieved at ${now.toLocaleString()}`)
+
+        dailyUpdate()
+      } else {
+        console.log('msg: ', msg)
+      }
+    }
+  } catch (err) {
+    console.error('Error in readMsgs(): ', err)
+  }
 }

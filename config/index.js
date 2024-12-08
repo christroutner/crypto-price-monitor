@@ -13,8 +13,8 @@ const config = {
   // public key: 2b28fd5ccaa5218afbf7556c8b539a8bbd15fa2bf07c29c51686f07442c3e8c5
 
   // Targets for AVAX-Stablecoin pair
-  avaxHighTarget: 65.95,
-  avaxLowTarget: 43.96,
+  avaxHighTarget: 63.12,
+  avaxLowTarget: 42,
 
   // Targets for AVAX-ETH pair
   ethHighTarget: 90.75,

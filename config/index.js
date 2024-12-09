@@ -13,16 +13,16 @@ const config = {
   nostrPubKey: '2b28fd5ccaa5218afbf7556c8b539a8bbd15fa2bf07c29c51686f07442c3e8c5',
 
   // Targets for AVAX-Stablecoin pair
-  avaxHighTarget: 63.12,
-  avaxLowTarget: 42,
+  avaxHighTarget: 53.7,
+  avaxLowTarget: 35.8,
 
   // Targets for AVAX-ETH pair
   ethHighTarget: 90.66,
   ethLowTarget: 60.44,
 
   // Targets for AVAX-BTC pair
-  btcHighTarget: 2350,
-  btcLowTarget: 1567
+  btcHighTarget: 2586,
+  btcLowTarget: 1724
 }
 
 // module.exports = config
